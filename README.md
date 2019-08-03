@@ -1,6 +1,7 @@
 # EDR
 Run server.py to start the server
 Run agent.py to send a POST request to http://localhost:5000/validate_request  with json as below
+
 {
     "AGENT_ID": "1",
 
