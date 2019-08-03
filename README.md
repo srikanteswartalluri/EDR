@@ -23,7 +23,7 @@
 
 Upon receiving the request, server validates the request for the validity as per the following data types
 Fields in Json Data:
-
+<code>
 AGENT ID : String (can be host name) - Compulsory 
 
 MD5 : String - Optional
@@ -39,3 +39,4 @@ Filepath : String - Compulsory
 File Size : Integer - Optional 
 
 Malicious : Boolean - Optional
+</code>
