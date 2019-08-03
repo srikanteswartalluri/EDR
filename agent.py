@@ -1,22 +1,20 @@
 import requests
+from req import RequestBuilder, RequestBuilderEncoder
+import json
 
-payload = {
-    "AGENT_ID": "1",
+r = RequestBuilder()
 
-    "MD5": "abcd12344",
-
-    "SHA2": "sdafbasdf234r32",
-
-    "Unix_Time": 22122018,
-
-    "Filename": "testfile",
-
-    "Filepath": "/path",
-
-    "File_Size": 20,
-
-    "Malicious": False
-}
-headers = {'content-type': 'application/json'}
+#valid request
+valid_req = RequestBuilderEncoder().encode(r)
+payload = json.loads(valid_req)
 res = requests.post('http://localhost:5000/validate_request', json=payload)
 print(res.status_code)
+
+#invalid request
+invalid_req = RequestBuilderEncoder().encode(r.get_invalid_request())
+payload = json.loads(invalid_req)
+res = requests.post('http://localhost:5000/validate_request', json=payload)
+print(res.status_code)
+
+
+
