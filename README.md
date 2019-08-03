@@ -1,7 +1,7 @@
 # EDR
-Run server.py to start the server
-Run agent.py to send a POST request to http://localhost:5000/validate_request  with json as below
-
+- Run server.py to start the server
+- Run agent.py to send a POST request to http://localhost:5000/validate_request  with json as below
+<code>
 {
     "AGENT_ID": "1",
 
@@ -19,6 +19,7 @@ Run agent.py to send a POST request to http://localhost:5000/validate_request  w
 
     "Malicious": False
 }
+</code>
 
 Upon receiving the request, server validates the request for the validity as per the following data types
 Fields in Json Data:
