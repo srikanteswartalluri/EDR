@@ -1,42 +1,87 @@
 from json import JSONEncoder
+import random
+import string
+import time
 
 
 class RequestBuilder:
+
     def __init__(self):
-        self.AGENT_ID = "1"
+        t = int(''.join(random.choice(string.digits) for i in range(3)))
+        if t % 2 != 0:
+            self.AGENT_ID = self.__get_random_string()
 
-        self.MD5 = "abcd12344"
+            self.MD5 = self.__get_random_alpha_num()
 
-        self.SHA2 = "sdafbasdf234r32"
+            self.SHA2 = self.__get_random_alpha_num()
 
-        self.Unix_Time = 22122018
+            self.Unix_Time = int(time.time())
 
-        self.Filename = "testfile"
+            self.Filename = self.__get_random_string()
 
-        self.Filepath = "/path"
+            self.Filepath = "/" + self.__get_random_string(5)
 
-        self.File_Size = 20
+            self.File_Size = int(''.join(random.choice(string.digits) for i in range(3)))
 
-        self.Malicious = False
+            self.Malicious = False
+        elif t % 3 != 0:
+            self.AGENT_ID = self.__get_random_string()
 
-    def get_invalid_request(self):
-        self.AGENT_ID = "1"
+            self.MD5 = self.__get_random_alpha_num()
 
-        self.MD5 = "abcd12344"
+            self.SHA2 = self.__get_random_alpha_num()
 
-        self.SHA2 = "sdafbasdf234r32"
+            self.Unix_Time = int(time.time())
 
-        self.Unix_Time = 22122018
+            self.Filename = self.__get_random_string()
 
-        self.Filename = "testfile"
+            self.Filepath = "/" + self.__get_random_string(5)
 
-        self.Filepath = "/path"
+            self.File_Size = ''.join(random.choice(string.digits) for i in range(3))
 
-        self.File_Size = "20"
+            self.Malicious = False
+        elif t % 5 != 0:
+            self.AGENT_ID = self.__get_random_string()
 
-        self.Malicious = False
+            self.MD5 = self.__get_random_alpha_num()
 
-        return self
+            self.Unix_Time = int(time.time())
+
+            self.Filename = self.__get_random_string()
+
+            self.Filepath = "/" + self.__get_random_string(5)
+
+            self.File_Size = int(''.join(random.choice(string.digits) for i in range(3)))
+
+            self.Malicious = False
+        else:
+            self.AGENT_ID = self.__get_random_string()
+
+            self.MD5 = self.__get_random_alpha_num()
+
+            self.SHA2 = self.__get_random_alpha_num()
+
+            self.Unix_Time = int(time.time())
+
+            self.Filename = self.__get_random_string()
+
+            self.Filepath = "/" + self.__get_random_string(5)
+
+            self.File_Size = int(''.join(random.choice(string.digits) for i in range(3)))
+
+            self.Malicious = False
+
+            self.something = "extra"
+
+
+
+    def __get_random_string(self, stringLength=8):
+        letters = string.ascii_letters
+        return ''.join(random.choice(letters) for i in range(stringLength))
+
+    def __get_random_alpha_num(self,stringLength=16):
+        letters_and_digits = string.ascii_letters + string.digits
+        return ''.join(random.choice(letters_and_digits) for i in range(stringLength))
 
 
 

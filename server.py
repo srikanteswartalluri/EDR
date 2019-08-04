@@ -5,11 +5,27 @@ from flask import Response
 
 app = Flask(__name__)
 
-
+results = []
 @app.route("/validate_request", methods=['POST'])
 def validate_json():
     content = request.get_json()
-    return Response(status=200) if validate_request(content) else Response(status=400)
+    if validate_request(content):
+        results.append(200)
+        return Response(status=200)
+    else:
+        results.append(400)
+        return Response(status=400)
+
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+
+@app.route('/shutdown', methods=['POST'])
+def shutdown():
+    shutdown_server()
+    return "shutting down"
 
 
 def validate_request(req):
