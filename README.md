@@ -59,3 +59,5 @@ File Size : Integer - Optional
 Malicious : Boolean - Optional
 
 ````
+
+Other approach based on the server and agent used here can be started on docker containers.
