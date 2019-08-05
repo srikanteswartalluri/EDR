@@ -1,33 +1,37 @@
-from multiprocessing import Process
+from multiprocessing import Process, Manager
 from flask import Flask
 from flask import request
 from flask import Response
 from m_agent import Agent
+import requests
+import argparse
 
+
+parser = argparse.ArgumentParser()
+parser.add_argument("num_agents", default="10", type=int)
+parser.add_argument("num_req_per_agent", default="100", type=int)
+args = parser.parse_args()
 aggregated_agent_results = []
 app = Flask(__name__)
+server_results = []
 
 
 @app.route("/validate_request", methods=['POST'])
 def validate_json():
     content = request.get_json()
     if validate_request(content):
+        server_results.append(200)
         return Response(status=200)
     else:
+        server_results.append(400)
         return Response(status=400)
 
 
-def shutdown_server():
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
-
-
-@app.route('/shutdown', methods=['POST'])
-def shutdown():
-    shutdown_server()
-    return "shutting down"
+@app.route('/get-stats/', methods=['get'])
+def visits():
+    return "{}:{}:{}".format(len(server_results),
+                             server_results.count(200),
+                             server_results.count(400))
 
 
 def validate_request(req):
@@ -77,29 +81,32 @@ server.start()
 
 
 def task(num=10):
-    agent = Agent()
-    agent.ex(num=num)
-    agent.print_summary()
-    # aggregated_agent_results += agent.get_results()
+    agent = Agent(L)
+    agent.ex(num)
 
 
-processes = []
-for i in range(5):
-    a = Process(target=task(100))
-    processes.append(a)
-    a.start()
+with Manager() as manager:
+    L = manager.list()
+    processes = []
+    for i in range(args.num_agents):
+        a = Process(target=task(args.num_req_per_agent), args=(L,))
+        processes.append(a)
+        a.start()
 
-for p in processes:
-    p.join()
+    for p in processes:
+        p.join()
+    print("Agent Summary")
+    print("Success: {}".format(L.count(200)))
+    print("Failed: {}".format(L.count(400)))
+    print("Total: {}".format(len(L)))
 
 
 print("Server Summary")
-# print("Success: {}".format(results.count(200)))
-# print("Failed: {}".format(results.count(400)))
-# print("Total: {}".format(len(results)))
-# msg = r.get("msg:hello")
-# print(msg)
-
+res = requests.get('http://localhost:5000/get-stats/')
+total, success, failed = res.text.split(":")
+print("Success: {}".format(success))
+print("Failed: {}".format(failed))
+print("Total: {}".format(total))
 
 server.terminate()
 server.join()

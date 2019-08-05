@@ -4,8 +4,8 @@ from req import RequestBuilder, RequestBuilderEncoder
 
 
 class Agent:
-    def __init__(self):
-        self.results = []
+    def __init__(self, L):
+        self.L = L
 
     async def validate(self, url, session):
 
@@ -13,7 +13,7 @@ class Agent:
         r = RequestBuilder()
         valid_req = RequestBuilderEncoder().encode(r)
         async with session.post(url, data=valid_req, headers={'content-type': 'application/json'}) as response:
-            self.results.append(response.status)
+            self.L.append(response.status)
             return await response.read()
 
     async def run(self, r):
@@ -34,11 +34,3 @@ class Agent:
         future = asyncio.ensure_future(self.run(num))
         loop.run_until_complete(future)
 
-    def print_summary(self):
-        print("Agent Summary")
-        print("Success: {}".format(self.results.count(200)))
-        print("Failed: {}".format(self.results.count(400)))
-        print("Total: {}".format(len(self.results)))
-
-    def get_results(self):
-        return self.results
